@@ -2,30 +2,39 @@
  
 <html>
 <head>
+  <script type="text/javascript">WebFontConfig={google:{families:['Open Sans:400,700','Open Sans Condensed:bold']}};(function() {var wf = document.createElement('script');wf.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';wf.type = 'text/javascript';wf.async = 'true';var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(wf, s);})();</script>
+
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
+            body{font-family:'Open Sans',Helvetica, Arial, San-serif;}
+            .panel-heading img{float:left;border-radius:50%;margin:6px 10px 0 0;}
             @media screen and (min-width: 1px) and (max-width: 767px){
                 #columns[data-columns]::before {
-                    content: '2 .col-xs-6';
+                    content: '1 .col-xs-12';
                 }
             }
             @media screen and (min-width:768px) and (max-width: 991px){
                 #columns[data-columns]::before {
-                    content: '3 .col-sm-4';
+                    content: '2 .col-sm-6';
                 }
             }
-            @media screen and (min-width:992px) and (max-width: 9999px){
+            @media screen and (min-width:992px) and (max-width: 1200px){
+                #columns[data-columns]::before {
+                    content: '3 .col-md-4';
+                }
+            } 
+            @media screen and (min-width:1201px) and (max-width: 9999px){
                 #columns[data-columns]::before {
                     content: '4 .col-md-3';
                 }
-            }    
+            }
+            p{font-size:16px;}    
     </style>
- 
     <title></title>
 </head>
  
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <h1 class="col-xs-12">Books by Ernest Hemingway</h1>
  
         <div data-columns="" id="columns">
@@ -38,18 +47,28 @@
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="js/salvattore.min.js"></script>
     <script>
-                function append(title, content) {
+                function append(name, img, handle, created, content) {
                     // build/select our elements
                     var grid = $('#columns')[0];
                     var item = document.createElement('div');
                     // build the html
                     var h = '<div class="panel panel-primary">';
-                    h += '<div class="panel-heading">';
-                    h += title;
-                    h += '</div>';
-                    h += '<div class="panel-body">';
+                    h += '<div class="panel-heading"><img src="';
+
+                    h += img;
+                    h += '" alt="" ><h4><strong>';
+
+                    //h += '<div class="panel-heading"><h4><strong>';
+
+                    h += name;
+                    h += '</strong></h4><h5>@';
+                    h += handle;  
+                    h += ' - ';                         
+                    h += created.substring(0, 10);             
+                    h += '</h5></div>';
+                    h += '<div class="panel-body"><p>';
                     h += content;
-                    h += '</div>';
+                    h += '</p></div>';
                     h += '</div>';
                     salvattore['append_elements'](grid, [item]);
                     item.outerHTML = h;
@@ -57,7 +76,7 @@
                 $.getJSON("twitterfeed.json", function (data) {
                     console.log(data);
                     $(data).each(function (i, tweet) {
-                        append(tweet.user.name, tweet.text);
+                        append(tweet.user.name, tweet.user.profile_image_url, tweet.user.screen_name, tweet.created_at, tweet.text);
                     });
                 });
     </script>
